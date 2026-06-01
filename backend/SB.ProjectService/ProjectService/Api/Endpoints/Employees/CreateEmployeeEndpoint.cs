@@ -6,7 +6,7 @@ namespace ProjectService.Api.Endpoints.Employees;
 public static class CreateEmployeeEndpoint
 {
     public static async Task<IResult> Handle(
-        CreateEmployeeRequest request,
+        ParamsEmployeeRequest request,
         CreateEmployeeUseCase useCase,
         CancellationToken ct)
     {

@@ -16,6 +16,15 @@ public sealed record CreateEmployee
     public string? Patronymic { get; init; }
 }
 
+public sealed record UpdateEmployee
+{
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public string Surname { get; init; }
+    public string? Patronymic { get; init; }
+    public string Email { get; init; }
+}
+
 public class CreateEmployeeUseCase(IUnitOfWork uow)
 {
     public async ValueTask<Result> Handle(
@@ -35,6 +44,48 @@ public class CreateEmployeeUseCase(IUnitOfWork uow)
         var employee = employeeResult.Value;
         await uow.EmployeeRepository.AddAsync(employee);
         await uow.SaveAsync(cancellationToken);
+        return Result.Ok();
+    }
+}
+
+public class UpdateEmployeeUseCase(IUnitOfWork uow)
+{
+    public async ValueTask<Result> Handle(UpdateEmployee command, CancellationToken ct)
+    {
+        var employee = await uow.EmployeeRepository.GetByIdAsync(command.Id);
+        if (employee is null)
+            return Result.Fail(EmployeeError.NotFound);
+
+        var emailOwner = await uow.EmployeeRepository.GetByEmailAsync(command.Email);
+        if (emailOwner is not null && emailOwner.Id != command.Id)
+            return Result.Fail(EmployeeError.EmailExists);
+
+        var updated = employee.Update(
+            new FullName(command.Name, command.Surname, command.Patronymic),
+            command.Email);
+
+        if (updated.IsFailed)
+            return updated.ToResult();
+
+        uow.EmployeeRepository.Update(updated.Value);
+        await uow.SaveAsync(ct);
+        return Result.Ok();
+    }
+}
+
+public class DeleteEmployeeUseCase(IUnitOfWork uow)
+{
+    public async ValueTask<Result> Handle(Guid id, CancellationToken ct)
+    {
+        var employee = await uow.EmployeeRepository.GetByIdAsync(id);
+        if (employee is null)
+            return Result.Fail(EmployeeError.NotFound);
+
+        if (employee.IsManager)
+            return Result.Fail(EmployeeError.Manager);
+
+        uow.EmployeeRepository.Delete(employee);
+        await uow.SaveAsync(ct);
         return Result.Ok();
     }
 }

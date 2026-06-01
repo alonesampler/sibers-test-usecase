@@ -25,7 +25,10 @@ public static class DependencyInjection
         private IServiceCollection AddServices()
             => services
                 .AddScoped<IGettingEmployeesService, GettingEmployeesService>()
-                .AddScoped<CreateEmployeeUseCase>();
+                .AddScoped<CreateEmployeeUseCase>()
+                .AddScoped<UpdateEmployeeUseCase>()
+                .AddScoped<DeleteEmployeeUseCase>();
+
 
         private IServiceCollection AddRepositories()
             => services

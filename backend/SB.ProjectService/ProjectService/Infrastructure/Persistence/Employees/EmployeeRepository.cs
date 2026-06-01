@@ -8,7 +8,7 @@ internal sealed class EmployeeRepository(DatabaseContext db) : IEmployeeReposito
 {
     public Task AddAsync(Employee employee)
         => db.Employees.AddAsync(employee).AsTask();
-    public void DeleteAsync(Employee employee)
+    public void Delete(Employee employee)
     {
         db.Employees.Remove(employee);
     }
@@ -41,7 +41,7 @@ internal sealed class EmployeeRepository(DatabaseContext db) : IEmployeeReposito
             .ToArrayAsync();
     }
 
-    public void UpdateAsync(Employee employee)
+    public void Update(Employee employee)
     {
         db.Employees.Update(employee);
     }

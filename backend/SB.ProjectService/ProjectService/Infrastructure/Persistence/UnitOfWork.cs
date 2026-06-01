@@ -1,6 +1,5 @@
 ﻿using ProjectService.Application.Dependencies.UnitOfWork;
 using ProjectService.Domain.Employees.Repositories;
-using Wolverine.EntityFrameworkCore;
 
 namespace ProjectService.Infrastructure.Persistence;
 

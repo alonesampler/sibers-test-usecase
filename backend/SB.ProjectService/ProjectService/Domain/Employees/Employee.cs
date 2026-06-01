@@ -21,4 +21,15 @@ public sealed class Employee(Guid id) : Entity<Guid>(id)
 
         return employee;
     }
+
+    public Result<Employee> Update(FullName fullName, string email)
+    {
+        var updated = new Employee(Id)
+        {
+            FullName = fullName,
+            Email = email,
+            IsManager = IsManager
+        };
+        return updated;
+    }
 }
