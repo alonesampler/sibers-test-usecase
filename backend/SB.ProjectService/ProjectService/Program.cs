@@ -1,10 +1,21 @@
+using ProjectService.Api.Endpoints.Employees;
+using ProjectService.Domain;
+using ProjectService.Infrastructure;
+using ProjectService.Infrastructure.OpenApi;
+using ProjectService.Infrastructure.Persistence;
+using Wolverine;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+    options.SerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
+});
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddValidation();
+builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -12,12 +23,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+    });
 }
 
-app.UseHttpsRedirection();
+await app.Services.ApplyMigrationsAsync();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapEmployeeEndpoints();
 
 app.Run();
