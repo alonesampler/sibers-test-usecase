@@ -1,10 +1,12 @@
 ﻿using ProjectService.Domain.Employees.Repositories;
+using ProjectService.Domain.Projects.Repositories;
 
 namespace ProjectService.Application.Dependencies.UnitOfWork;
 
 public interface IUnitOfWork
 {
     IEmployeeRepository EmployeeRepository { get; }
+    IProjectRepository ProjectRepository { get; }
 
     Task SaveAsync(CancellationToken ct = default);
 }

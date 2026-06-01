@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using ProjectService.Application.Dependencies.EmployeesServices;
-using ProjectService.Application.Dependencies.UnitOfWork;
 using ProjectService.Application.Mapping;
 using ProjectService.Application.UseCases.Employees.DTOs;
 using ProjectService.Domain.Employees;

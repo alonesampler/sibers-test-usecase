@@ -3,7 +3,6 @@ using ProjectService.Domain;
 using ProjectService.Infrastructure;
 using ProjectService.Infrastructure.OpenApi;
 using ProjectService.Infrastructure.Persistence;
-using Wolverine;
 
 var builder = WebApplication.CreateBuilder(args);
 
