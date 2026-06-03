@@ -1,4 +1,4 @@
-﻿using ProjectService.Application.Dependencies.EmployeesServices;
+﻿using ProjectService.Application.Dependencies.Services;
 
 namespace ProjectService.Api.Endpoints.Employees;
 

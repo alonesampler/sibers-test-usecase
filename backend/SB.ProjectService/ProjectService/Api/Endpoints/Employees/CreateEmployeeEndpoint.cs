@@ -10,7 +10,7 @@ public static class CreateEmployeeEndpoint
         CreateEmployeeUseCase useCase,
         CancellationToken ct)
     {
-        var command = new CreateEmployee
+        var command = new CreateEmployeeCommand
         {
             Email = request.Email,
             Name = request.Name,

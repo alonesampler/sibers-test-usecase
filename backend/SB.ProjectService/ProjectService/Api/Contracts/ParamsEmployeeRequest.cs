@@ -12,6 +12,6 @@ public class ParamsEmployeeRequest : IValidatableObject
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (!new EmailAddressAttribute().IsValid(Email))
-            yield return new ValidationResult("Некорректный email", new[] { nameof(Email) });
+            yield return new ValidationResult("Invalid email", new[] { nameof(Email) });
     }
 }

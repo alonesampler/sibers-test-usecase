@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using ProjectService.Application.UseCases.Employees.DTOs;
 
-namespace ProjectService.Application.Dependencies.EmployeesServices;
+namespace ProjectService.Application.Dependencies.Services;
 
 public interface IGettingEmployeesService
 {

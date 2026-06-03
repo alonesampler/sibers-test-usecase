@@ -22,8 +22,5 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(e => e.Email)
             .IsRequired()
             .HasMaxLength(100);
-
-        builder.Property(e => e.IsManager)
-            .IsRequired();
     }
 }

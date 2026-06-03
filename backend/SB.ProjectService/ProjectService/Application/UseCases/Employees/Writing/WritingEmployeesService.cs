@@ -5,7 +5,7 @@ using ProjectService.Domain.Employees;
 namespace ProjectService.Application.UseCases.Employees.Writing;
 
 
-public sealed record CreateEmployee
+public sealed record CreateEmployeeCommand
 {
     public string Email { get; init; }
 
@@ -16,7 +16,7 @@ public sealed record CreateEmployee
     public string? Patronymic { get; init; }
 }
 
-public sealed record UpdateEmployee
+public sealed record UpdateEmployeeCommand
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
@@ -28,7 +28,7 @@ public sealed record UpdateEmployee
 public class CreateEmployeeUseCase(IUnitOfWork uow)
 {
     public async ValueTask<Result> Handle(
-        CreateEmployee command,
+        CreateEmployeeCommand command,
         CancellationToken cancellationToken)
     {
         var existing = await uow.EmployeeRepository.GetByEmailAsync(command.Email);
@@ -42,6 +42,7 @@ public class CreateEmployeeUseCase(IUnitOfWork uow)
             return employeeResult.ToResult();
 
         var employee = employeeResult.Value;
+
         await uow.EmployeeRepository.AddAsync(employee);
         await uow.SaveAsync(cancellationToken);
         return Result.Ok();
@@ -50,7 +51,7 @@ public class CreateEmployeeUseCase(IUnitOfWork uow)
 
 public class UpdateEmployeeUseCase(IUnitOfWork uow)
 {
-    public async ValueTask<Result> Handle(UpdateEmployee command, CancellationToken ct)
+    public async ValueTask<Result> Handle(UpdateEmployeeCommand command, CancellationToken ct)
     {
         var employee = await uow.EmployeeRepository.GetByIdAsync(command.Id);
         if (employee is null)
@@ -80,9 +81,6 @@ public class DeleteEmployeeUseCase(IUnitOfWork uow)
         var employee = await uow.EmployeeRepository.GetByIdAsync(id);
         if (employee is null)
             return Result.Fail(EmployeeError.NotFound);
-
-        if (employee.IsManager)
-            return Result.Fail(EmployeeError.Manager);
 
         uow.EmployeeRepository.Delete(employee);
         await uow.SaveAsync(ct);

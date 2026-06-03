@@ -1,9 +1,17 @@
-﻿using ProjectService.Application.Dependencies.EmployeesServices;
+﻿using ProjectService.Application.Dependencies.Services;
 using ProjectService.Application.Dependencies.UnitOfWork;
+using ProjectService.Application.UseCases.Document;
 using ProjectService.Application.UseCases.Employees.Getting;
 using ProjectService.Application.UseCases.Employees.Writing;
+using ProjectService.Application.UseCases.Projects.Getting;
+using ProjectService.Application.UseCases.Projects.Writing;
+using ProjectService.Domain.Documents.Repositories;
 using ProjectService.Domain.Employees.Repositories;
+using ProjectService.Domain.Projects.Repositories;
+using ProjectService.Infrastructure.Persistence.Documents;
 using ProjectService.Infrastructure.Persistence.Employees;
+using ProjectService.Infrastructure.Persistence.Projects;
+using static ProjectService.Application.UseCases.Projects.Writing.CreateProjectUseCase;
 
 namespace ProjectService.Infrastructure.Persistence;
 
@@ -24,7 +32,12 @@ public static class DependencyInjection
 
         private IServiceCollection AddServices()
             => services
+                .AddScoped<IDocumentsService, DocumentsService>()
+                .AddScoped<IGettingProjectsService, GettingProjectsService>()
                 .AddScoped<IGettingEmployeesService, GettingEmployeesService>()
+                .AddScoped<CreateProjectUseCase>()
+                .AddScoped<UpdateProjectUseCase>()
+                .AddScoped<DeleteProjectUseCase>()
                 .AddScoped<CreateEmployeeUseCase>()
                 .AddScoped<UpdateEmployeeUseCase>()
                 .AddScoped<DeleteEmployeeUseCase>();
@@ -33,6 +46,8 @@ public static class DependencyInjection
         private IServiceCollection AddRepositories()
             => services
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IDocumentRepository, DocumentRepository>()
+                .AddScoped<IProjectRepository, ProjectRepository>()
                 .AddScoped<IEmployeeRepository, EmployeeRepository>();
     }
 }

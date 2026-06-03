@@ -1,23 +1,28 @@
 ﻿using ProjectService.Api.Contracts;
-using ProjectService.Application.UseCases.Employees.Writing;
+using ProjectService.Application.UseCases.Projects.Writing;
+using static ProjectService.Application.UseCases.Projects.Writing.CreateProjectUseCase;
 
-namespace ProjectService.Api.Endpoints.Employees;
+namespace ProjectService.Api.Endpoints.Projects;
 
-public static class UpdateDeleteEmployeeEndpoint
+public static class UpdateDeleteProjectEndpoint
 {
     public static async Task<IResult> Update(
         Guid id,
-        ParamsEmployeeRequest request,
-        UpdateEmployeeUseCase useCase,
+        ParamsProjectRequest request,
+        UpdateProjectUseCase useCase,
         CancellationToken ct)
     {
-        var command = new UpdateEmployeeCommand
+        var command = new UpdateProjectCommand
         {
             Id = id,
-            Email = request.Email,
             Name = request.Name,
-            Surname = request.Surname,
-            Patronymic = request.Patronymic
+            CustomerCompanyName = request.CustomerCompanyName,
+            ExecutorCompanyName = request.ExecutorCompanyName,
+            StartDate = request.StartDate,
+            EndDate = request.EndDate,
+            Priority = request.Priority,
+            ManagerId = request.ManagerId,
+            EmployeeIds = request.EmployeeIds
         };
 
         var result = await useCase.Handle(command, ct);
@@ -28,7 +33,7 @@ public static class UpdateDeleteEmployeeEndpoint
 
     public static async Task<IResult> Delete(
         Guid id,
-        DeleteEmployeeUseCase useCase,
+        DeleteProjectUseCase useCase,
         CancellationToken ct)
     {
         var result = await useCase.Handle(id, ct);

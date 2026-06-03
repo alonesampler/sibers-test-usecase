@@ -13,6 +13,9 @@ internal sealed class EmployeeRepository(DatabaseContext db) : IEmployeeReposito
         db.Employees.Remove(employee);
     }
 
+    public Task<Employee[]> GetByIdsAsync(Guid[] ids)
+        => db.Employees.Where(e => ids.Contains(e.Id)).ToArrayAsync();
+
     public Task<Employee[]> GetAllAsync() =>
         db.Employees
             .AsNoTracking()

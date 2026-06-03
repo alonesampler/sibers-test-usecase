@@ -8,7 +8,7 @@ public static class EmployeeExtensionMapping
     public static EmployeeDto ToResponseDto(this Employee employee)
         => new()
         {
-            Id =employee.Id,
+            Id = employee.Id,
             Email = employee.Email,
             Name = employee.FullName.Name,
             Surname = employee.FullName.Surname,

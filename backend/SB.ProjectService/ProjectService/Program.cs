@@ -1,4 +1,6 @@
+using ProjectService.Api.Endpoints.Documents;
 using ProjectService.Api.Endpoints.Employees;
+using ProjectService.Api.Endpoints.Projects;
 using ProjectService.Domain;
 using ProjectService.Infrastructure;
 using ProjectService.Infrastructure.OpenApi;
@@ -30,6 +32,8 @@ if (app.Environment.IsDevelopment())
 
 await app.Services.ApplyMigrationsAsync();
 
-app.MapEmployeeEndpoints();
+app.MapEmployeesEndpoints();
+app.MapProjectsEndpoints();
+app.MapDocumentsEndpoints();
 
 app.Run();
