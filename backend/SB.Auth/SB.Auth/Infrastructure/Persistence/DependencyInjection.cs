@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SB.Auth.Application.UseCases;
 using SB.Auth.Domain.User;
 
@@ -13,10 +14,9 @@ public static class DependencyInjection
 
         private IServiceCollection AddEfCore(IConfiguration configuration)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            services.AddNpgsql<DatabaseContext>(
-                configuration.GetConnectionString("DefaultConnection"),
-                _ => { });
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(connectionString));
             return services;
         }
 
@@ -36,6 +36,8 @@ public static class DependencyInjection
         private IServiceCollection AddUseCases()
             => services
                 .AddScoped<RegisterUseCase>()
-                .AddScoped<LoginUseCase>();
+                .AddScoped<LoginUseCase>()
+                .AddScoped<GetUserAccountsUseCase>()
+                .AddScoped<SyncEmployeeEmailUseCase>();
     }
 }

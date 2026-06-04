@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SB.Auth.Api.Filters;
 using SB.Auth.Domain;
 using SB.Auth.Infrastructire.Persistence;
 using System.Text;
@@ -11,7 +12,10 @@ public static class DependencyInjection
     extension(IServiceCollection services)
     {
         public IServiceCollection AddInfrastructure(IConfiguration configuration)
-            => services.AddPersistence(configuration).AddJwt(configuration);
+            => services
+                .AddPersistence(configuration)
+                .AddJwt(configuration)
+                .AddInternalApi(configuration);
 
         private IServiceCollection AddJwt(IConfiguration configuration)
         {
@@ -39,6 +43,13 @@ public static class DependencyInjection
                 });
 
             services.AddAuthorization();
+            return services;
+        }
+
+        private IServiceCollection AddInternalApi(IConfiguration configuration)
+        {
+            services.Configure<InternalApiSettings>(configuration.GetSection("InternalApi"));
+            services.AddScoped<InternalApiKeyFilter>();
             return services;
         }
     }

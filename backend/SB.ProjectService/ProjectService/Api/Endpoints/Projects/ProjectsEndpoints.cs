@@ -1,4 +1,4 @@
-﻿using ProjectService.Domain;
+﻿using ProjectService.Api.Policy;
 
 namespace ProjectService.Api.Endpoints.Projects;
 
@@ -15,7 +15,7 @@ public static class ProjectsEndpoints
             .RequireAuthorization();
 
         v1Group.MapPost("/", CreateProjectEndpoint.Handle)
-            .RequireAuthorization(policy => policy.RequireRole(AppRoles.Director));
+            .RequireAuthorization(policy => policy.RequireRole(AppRoles.Director, AppRoles.ProjectManager));
 
         v1Group.MapPut("/{id:guid}", UpdateDeleteProjectEndpoint.Update)
             .RequireAuthorization(policy => policy.RequireRole(AppRoles.Director, AppRoles.ProjectManager));

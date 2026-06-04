@@ -9,8 +9,11 @@ public sealed class Employee(Guid id) : Entity<Guid>(id)
     public string Email { get; private set; }
 
     public static Result<Employee> Create(FullName fullName, string email)
+        => CreateWithId(Guid.CreateVersion7(), fullName, email);
+
+    public static Result<Employee> CreateWithId(Guid id, FullName fullName, string email)
     {
-        var employee = new Employee(Guid.CreateVersion7())
+        var employee = new Employee(id)
         {
             FullName = fullName,
             Email = email

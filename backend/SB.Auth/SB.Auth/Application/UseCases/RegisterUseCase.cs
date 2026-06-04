@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SB.Auth.Domain.User;
 
 namespace SB.Auth.Application.UseCases;
@@ -19,6 +20,11 @@ public class RegisterUseCase(UserManager<ApplicationUser> userManager, RoleManag
         var existing = await userManager.FindByEmailAsync(command.Email);
         if (existing is not null)
             return Result.Fail("User with this email already exists");
+
+        var linkedEmployee = await userManager.Users
+            .AnyAsync(u => u.EmployeeId == command.EmployeeId, ct);
+        if (linkedEmployee)
+            return Result.Fail("This employee already has a login account");
 
         if (!AppRoles.All.Contains(command.Role))
             return Result.Fail($"Invalid role. Valid roles: {string.Join(", ", AppRoles.All)}");

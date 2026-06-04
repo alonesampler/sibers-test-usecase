@@ -13,6 +13,7 @@ public static class CreateProjectTaskEndpoint
     {
         var command = new CreateProjectTaskCommand
         {
+            ProjectId = projectId,
             Name = request.Name,
             Comment = request.Comment,
             Priority = request.Priority,

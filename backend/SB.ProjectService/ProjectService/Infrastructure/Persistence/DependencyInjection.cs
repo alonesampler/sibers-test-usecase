@@ -1,4 +1,5 @@
-﻿using ProjectService.Application.Dependencies.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectService.Application.Dependencies.Services;
 using ProjectService.Application.Dependencies.UnitOfWork;
 using ProjectService.Application.UseCases.Document;
 using ProjectService.Application.UseCases.Employees.Getting;
@@ -25,10 +26,9 @@ public static class DependencyInjection
 
         private IServiceCollection AddEfCore(IConfiguration configuration)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            return services.AddNpgsql<DatabaseContext>(
-                configuration.GetConnectionString("DefaultConnection"),
-                _ => { });
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            return services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(connectionString));
         }
 
         private IServiceCollection AddServices()

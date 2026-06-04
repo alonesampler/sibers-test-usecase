@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using ProjectService.Application.Dependencies.Services;
 using ProjectService.Application.Dependencies.UnitOfWork;
 using ProjectService.Domain.Employees;
 
@@ -13,7 +14,7 @@ public sealed record UpdateEmployeeCommand
     public string Email { get; init; }
 }
 
-public class UpdateEmployeeUseCase(IUnitOfWork uow)
+public class UpdateEmployeeUseCase(IUnitOfWork uow, IEmployeeAccountSyncService accountSync)
 {
     public async ValueTask<Result> Handle(UpdateEmployeeCommand command, CancellationToken ct)
     {
@@ -34,6 +35,10 @@ public class UpdateEmployeeUseCase(IUnitOfWork uow)
 
         uow.EmployeeRepository.Update(updated.Value);
         await uow.SaveAsync(ct);
-        return Result.Ok();
+
+        var sync = await accountSync.SyncEmailAsync(command.Id, command.Email, ct);
+        return sync.IsSuccess
+            ? Result.Ok()
+            : Result.Fail(sync.Errors);
     }
 }

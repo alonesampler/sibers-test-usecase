@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectService.Application.Dependencies.UnitOfWork;
+﻿using ProjectService.Application.Dependencies.UnitOfWork;
 using ProjectService.Domain.Employees;
 
 namespace ProjectService.Infrastructure.Persistence;
@@ -13,12 +12,13 @@ public static class DatabaseSeeding
             using var scope = serviceProvider.CreateScope();
             var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-            var existing = await uow.EmployeeRepository.GetByEmailAsync("director@test.com");
+            var existing = await uow.EmployeeRepository.GetByEmailAsync(SeedData.AdminEmail);
             if (existing is not null) return;
 
-            var employee = Employee.Create(
-                new FullName("Director", "Test", null),
-                "director@test.com").Value;
+            var employee = Employee.CreateWithId(
+                SeedData.AdminEmployeeId,
+                new FullName("Admin", "System", null),
+                SeedData.AdminEmail).Value;
 
             await uow.EmployeeRepository.AddAsync(employee);
             await uow.SaveAsync();

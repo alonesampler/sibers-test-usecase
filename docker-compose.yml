@@ -1,0 +1,85 @@
+services:
+  proj_mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "my-Se1c%ret-pw"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/opt/mssql-tools18/bin/sqlcmd",
+          "-S",
+          "localhost",
+          "-U",
+          "sa",
+          "-P",
+          "my-Se1c%ret-pw",
+          "-Q",
+          "SELECT 1",
+          "-b",
+          "-No",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
+
+  auth:
+    image: sibers-auth
+    build:
+      context: ./backend/SB.Auth
+      dockerfile: SB.Auth/Dockerfile
+    depends_on:
+      proj_mssql:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Server=proj_mssql,1433;Database=siber-auth;User Id=sa;Password=my-Se1c%ret-pw;TrustServerCertificate=True;Encrypt=True;
+      JwtSettings__Secret: siber-company-test-case-secret-word
+      JwtSettings__Issuer: SB.Auth
+      JwtSettings__Audience: SB.ProjectService
+      JwtSettings__ExpiresInHours: "2"
+      InternalApi__ApiKey: siber-internal-sync-key
+    restart: unless-stopped
+
+  project-service:
+    image: sibers-project
+    build:
+      context: ./backend/SB.ProjectService
+      dockerfile: ProjectService/Dockerfile
+    depends_on:
+      proj_mssql:
+        condition: service_healthy
+      auth:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Server=proj_mssql,1433;Database=siber-project;User Id=sa;Password=my-Se1c%ret-pw;TrustServerCertificate=True;Encrypt=True;
+      JwtSettings__Secret: siber-company-test-case-secret-word
+      JwtSettings__Issuer: SB.Auth
+      JwtSettings__Audience: SB.ProjectService
+      JwtSettings__ExpiresInHours: "2"
+      Auth__BaseUrl: http://auth:8080
+      Auth__InternalApiKey: siber-internal-sync-key
+    restart: unless-stopped
+
+  frontend:
+    image: sibers-frontend
+    ports:
+      - "5173:80"
+    build:
+      context: .
+      dockerfile: frontend/dockerfile
+    depends_on:
+      - auth
+      - project-service
+    restart: unless-stopped
+
+volumes:
+  mssql-data:
+    name: sibers-mssql-data
