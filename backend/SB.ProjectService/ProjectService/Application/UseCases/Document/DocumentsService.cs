@@ -25,7 +25,7 @@ public class DocumentsService(IUnitOfWork uow) : IDocumentsService
         return document.ToDownloadDto();
     }
 
-    public async Task<Result> UploadAsync(Guid projectId, string fileName, string contentType, byte[] content)
+    public async Task<Result> UploadAsync(Guid projectId, string fileName, string contentType, byte[] content, CancellationToken ct)
     {
         if (content is null || content.Length == 0)
             return Result.Fail(DocumentError.InvalidFile);
@@ -34,21 +34,20 @@ public class DocumentsService(IUnitOfWork uow) : IDocumentsService
         if (project is null)
             return Result.Fail(ProjectError.NotFound);
 
-        var document = Domain.Documents.Document.Create(project.Id, fileName, contentType, content);
-
+        var document = Domain.Documents.Document.Create(projectId, fileName, contentType, content);
         await uow.DocumentRepository.AddAsync(document);
-        await uow.SaveAsync(CancellationToken.None);
+        await uow.SaveAsync(ct);
         return Result.Ok();
     }
 
-    public async Task<Result> DeleteAsync(Guid id)
+    public async Task<Result> DeleteAsync(Guid id, CancellationToken ct)
     {
         var document = await uow.DocumentRepository.GetByIdAsync(id);
         if (document is null)
             return Result.Fail(DocumentError.NotFound);
 
         uow.DocumentRepository.Delete(document);
-        await uow.SaveAsync(CancellationToken.None);
+        await uow.SaveAsync(ct);
         return Result.Ok();
     }
 }

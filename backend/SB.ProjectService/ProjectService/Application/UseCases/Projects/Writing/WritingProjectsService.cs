@@ -57,51 +57,50 @@ public class CreateProjectUseCase(IUnitOfWork uow)
         await uow.SaveAsync(ct);
         return Result.Ok();
     }
+}
 
-    public class UpdateProjectUseCase(IUnitOfWork uow)
+public class DeleteProjectUseCase(IUnitOfWork uow)
+{
+    public async ValueTask<Result> Handle(Guid id, CancellationToken ct)
     {
-        public async ValueTask<Result> Handle(UpdateProjectCommand command, CancellationToken ct)
-        {
-            var project = await uow.ProjectRepository.GetByIdAsync(command.Id);
-            if (project is null)
-                return Result.Fail(ProjectError.NotFound);
+        var project = await uow.ProjectRepository.GetByIdAsync(id);
+        if (project is null)
+            return Result.Fail(ProjectError.NotFound);
 
-            var manager = await uow.EmployeeRepository.GetByIdAsync(command.ManagerId);
-            if (manager is null)
-                return Result.Fail(EmployeeError.NotFound);
-
-            var employees = await uow.EmployeeRepository.GetByIdsAsync(command.EmployeeIds);
-
-            var result = project.Update(
-                command.Name,
-                command.CustomerCompanyName,
-                command.ExecutorCompanyName,
-                command.StartDate,
-                command.EndDate,
-                command.Priority,
-                manager,
-                employees);
-
-            if (result.IsFailed)
-                return result;
-
-            uow.ProjectRepository.Update(project);
-            await uow.SaveAsync(ct);
-            return Result.Ok();
-        }
+        uow.ProjectRepository.Delete(project);
+        await uow.SaveAsync(ct);
+        return Result.Ok();
     }
+}
 
-    public class DeleteProjectUseCase(IUnitOfWork uow)
+public class UpdateProjectUseCase(IUnitOfWork uow)
+{
+    public async ValueTask<Result> Handle(UpdateProjectCommand command, CancellationToken ct)
     {
-        public async ValueTask<Result> Handle(Guid id, CancellationToken ct)
-        {
-            var project = await uow.ProjectRepository.GetByIdAsync(id);
-            if (project is null)
-                return Result.Fail(ProjectError.NotFound);
+        var project = await uow.ProjectRepository.GetByIdAsync(command.Id);
+        if (project is null)
+            return Result.Fail(ProjectError.NotFound);
 
-            uow.ProjectRepository.Delete(project);
-            await uow.SaveAsync(ct);
-            return Result.Ok();
-        }
+        var manager = await uow.EmployeeRepository.GetByIdAsync(command.ManagerId);
+        if (manager is null)
+            return Result.Fail(EmployeeError.NotFound);
+
+        var employees = await uow.EmployeeRepository.GetByIdsAsync(command.EmployeeIds);
+
+        var result = project.Update(
+            command.Name,
+            command.CustomerCompanyName,
+            command.ExecutorCompanyName,
+            command.StartDate,
+            command.EndDate,
+            command.Priority,
+            manager,
+            employees);
+
+        if (result.IsFailed)
+            return result;
+
+        await uow.SaveAsync(ct);
+        return Result.Ok();
     }
 }

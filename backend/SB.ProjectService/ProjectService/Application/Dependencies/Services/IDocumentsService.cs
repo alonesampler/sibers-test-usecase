@@ -5,8 +5,8 @@ namespace ProjectService.Application.Dependencies.Services;
 
 public interface IDocumentsService
 {
-    Task<Result> DeleteAsync(Guid id);
+    Task<Result> DeleteAsync(Guid id, CancellationToken ct);
     Task<Result<DocumentDownloadDto>> DownloadAsync(Guid id);
     Task<Result<IEnumerable<DocumentDto>>> GetByProjectIdAsync(Guid projectId);
-    Task<Result> UploadAsync(Guid projectId, string fileName, string contentType, byte[] content);
+    Task<Result> UploadAsync(Guid projectId, string fileName, string contentType, byte[] content, CancellationToken ct);
 }

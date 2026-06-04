@@ -9,12 +9,12 @@ internal sealed class EmployeeRepository(DatabaseContext db) : IEmployeeReposito
     public Task AddAsync(Employee employee)
         => db.Employees.AddAsync(employee).AsTask();
     public void Delete(Employee employee)
-    {
-        db.Employees.Remove(employee);
-    }
+        => db.Employees.Remove(employee);
 
     public Task<Employee[]> GetByIdsAsync(Guid[] ids)
-        => db.Employees.Where(e => ids.Contains(e.Id)).ToArrayAsync();
+        => db.Employees
+            .Where(e => ids.Contains(e.Id))
+            .ToArrayAsync();
 
     public Task<Employee[]> GetAllAsync() =>
         db.Employees
