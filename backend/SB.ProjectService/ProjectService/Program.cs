@@ -1,6 +1,7 @@
 using ProjectService.Api.Endpoints.Documents;
 using ProjectService.Api.Endpoints.Employees;
 using ProjectService.Api.Endpoints.Projects;
+using ProjectService.Api.Endpoints.Tasks;
 using ProjectService.Domain;
 using ProjectService.Infrastructure;
 using ProjectService.Infrastructure.OpenApi;
@@ -35,5 +36,6 @@ await app.Services.ApplyMigrationsAsync();
 app.MapEmployeesEndpoints();
 app.MapProjectsEndpoints();
 app.MapDocumentsEndpoints();
+app.MapTasksEndpoints();
 
 app.Run();

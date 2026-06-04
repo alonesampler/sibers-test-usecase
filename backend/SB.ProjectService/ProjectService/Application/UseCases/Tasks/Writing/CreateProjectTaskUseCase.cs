@@ -5,7 +5,7 @@ using ProjectService.Domain.Projects;
 
 namespace ProjectService.Application.UseCases.Tasks.Writing;
 
-public sealed record CreateTaskCommand
+public sealed record CreateProjectTaskCommand
 {
     public Guid ProjectId { get; init; }
     public string Name { get; init; }
@@ -15,9 +15,9 @@ public sealed record CreateTaskCommand
     public Guid? AssigneeId { get; init; }
 }
 
-public class CreateTaskUseCase(IUnitOfWork uow)
+public class CreateProjectTaskUseCase(IUnitOfWork uow)
 {
-    public async ValueTask<Result> Handle(CreateTaskCommand command, CancellationToken ct)
+    public async ValueTask<Result> Handle(CreateProjectTaskCommand command, CancellationToken ct)
     {
         var project = await uow.ProjectRepository.GetByIdAsync(command.ProjectId);
         if (project is null)

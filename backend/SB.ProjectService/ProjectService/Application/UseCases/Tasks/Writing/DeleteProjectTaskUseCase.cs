@@ -4,7 +4,7 @@ using ProjectService.Domain.Projects;
 
 namespace ProjectService.Application.UseCases.Tasks.Writing;
 
-public class DeleteTaskUseCase(IUnitOfWork uow)
+public class DeleteProjectTaskUseCase(IUnitOfWork uow)
 {
     public async ValueTask<Result> Handle(Guid id, CancellationToken ct)
     {

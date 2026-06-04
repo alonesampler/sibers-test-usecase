@@ -9,13 +9,13 @@ public class UnitOfWork(
     DatabaseContext DbContext,
     IEmployeeRepository employeeRepository,
     IProjectRepository projectRepository,
-    IDocumentRepository documentRepository) : IUnitOfWork
+    IDocumentRepository documentRepository,
+    IProjectTaskRepository projectTaskRepository ) : IUnitOfWork
 {
     public IEmployeeRepository EmployeeRepository => employeeRepository;
-
     public IProjectRepository ProjectRepository => projectRepository;
-
     public IDocumentRepository DocumentRepository => documentRepository;
+    public IProjectTaskRepository ProjectTaskRepository => projectTaskRepository;
 
     public Task SaveAsync(CancellationToken ct = default)
         => DbContext.SaveChangesAsync(ct);
