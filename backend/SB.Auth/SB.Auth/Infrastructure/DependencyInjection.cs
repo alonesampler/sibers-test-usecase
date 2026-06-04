@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
-using ProjectService.Infrastructure.Persistence;
+using SB.Auth.Domain;
+using SB.Auth.Infrastructire.Persistence;
 using System.Text;
 
-namespace ProjectService.Infrastructure;
+namespace SB.Auth.Infrastructire;
 
 public static class DependencyInjection
 {
@@ -16,8 +16,13 @@ public static class DependencyInjection
         private IServiceCollection AddJwt(IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
+            services.AddSingleton(jwtSettings);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters

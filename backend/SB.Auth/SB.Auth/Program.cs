@@ -1,11 +1,8 @@
-using ProjectService.Api.Endpoints.Documents;
-using ProjectService.Api.Endpoints.Employees;
-using ProjectService.Api.Endpoints.Projects;
-using ProjectService.Api.Endpoints.Tasks;
-using ProjectService.Domain;
-using ProjectService.Infrastructure;
-using ProjectService.Infrastructure.OpenApi;
-using ProjectService.Infrastructure.Persistence;
+using SB.Auth.Api.Endpoints;
+using SB.Auth.Domain;
+using SB.Auth.Infrastructire;
+using SB.Auth.Infrastructire.OpenApi;
+using SB.Auth.Infrastructire.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,19 +12,14 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
 });
 
-builder.Services.AddValidation();
 builder.Services.AddOpenApi(OpenApiConfigurator.Configure);
-builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
@@ -35,14 +27,10 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.Services.ApplyMigrationsAsync();
-await app.Services.SeedAsync();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapEmployeesEndpoints();
-app.MapProjectsEndpoints();
-app.MapDocumentsEndpoints();
-app.MapTasksEndpoints();
+app.MapAuthEndpoints();
 
 app.Run();

@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="SB.Auth/SB.Auth.csproj" />
+  </Folder>
+</Solution>

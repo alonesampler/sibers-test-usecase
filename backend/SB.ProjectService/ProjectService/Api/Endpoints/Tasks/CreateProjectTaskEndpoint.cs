@@ -6,13 +6,13 @@ namespace ProjectService.Api.Endpoints.Tasks;
 public static class CreateProjectTaskEndpoint
 {
     public static async Task<IResult> Handle(
+        Guid projectId,
         ParamsProjectTaskRequest request,
         CreateProjectTaskUseCase useCase,
         CancellationToken ct)
     {
         var command = new CreateProjectTaskCommand
         {
-            ProjectId = request.ProjectId,
             Name = request.Name,
             Comment = request.Comment,
             Priority = request.Priority,
