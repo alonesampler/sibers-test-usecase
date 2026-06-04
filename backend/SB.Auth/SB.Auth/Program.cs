@@ -29,6 +29,8 @@ if (app.Environment.IsDevelopment())
 await app.Services.ApplyMigrationsAsync();
 await app.Services.SeedAsync();
 
+app.MapGet("/health", () => Results.Ok());
+
 app.UseAuthentication();
 app.UseAuthorization();
 
