@@ -1,6 +1,6 @@
-﻿namespace ProjectService.Application.UseCases.Projects.DTOs;
+﻿namespace ProjectService.Domain.Projects;
 
-public record ProjectFilterDto
+public record ProjectFilter
 {
     public DateOnly? StartDateFrom { get; init; }
     public DateOnly? StartDateTo { get; init; }

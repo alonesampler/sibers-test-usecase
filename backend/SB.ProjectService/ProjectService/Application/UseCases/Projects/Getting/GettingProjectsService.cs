@@ -9,7 +9,7 @@ namespace ProjectService.Application.UseCases.Projects.Getting;
 
 public class GettingProjectsService(IProjectRepository projectRepository) : IGettingProjectsService
 {
-    public async Task<Result<IEnumerable<ProjectDto>>> GetAllAsync(ProjectFilterDto filter, ProjectSort sort)
+    public async Task<Result<IEnumerable<ProjectDto>>> GetAllAsync(ProjectFilter filter, ProjectSort sort)
     {
         var projects = await projectRepository.GetAllAsync(filter, sort);
         return Result.Ok(projects.ToResponseDtos());

@@ -31,7 +31,8 @@ public static class DocumentEndpoints
             projectId,
             file.FileName,
             file.ContentType,
-            ms.ToArray());
+            ms.ToArray(),
+            ct);
 
         return result.IsSuccess
             ? Results.Created()
@@ -63,7 +64,7 @@ public static class DocumentEndpoints
         IDocumentsService service,
         CancellationToken ct)
     {
-        var result = await service.DeleteAsync(id);
+        var result = await service.DeleteAsync(id, ct);
         return result.IsSuccess
             ? Results.NoContent()
             : result.Errors.Any(e => e.Metadata.TryGetValue("ErrorCode", out var c) && c is "E404")

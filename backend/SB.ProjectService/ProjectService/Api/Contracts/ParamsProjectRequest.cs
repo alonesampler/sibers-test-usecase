@@ -2,7 +2,7 @@
 
 namespace ProjectService.Api.Contracts;
 
-public class ParamsProjectRequest : IValidatableObject
+public record ParamsProjectRequest : IValidatableObject
 {
     public required string Name { get; init; }
     public required string CustomerCompanyName { get; init; }
@@ -15,15 +15,6 @@ public class ParamsProjectRequest : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrWhiteSpace(Name))
-            yield return new ValidationResult("Name is required", [nameof(Name)]);
-
-        if (string.IsNullOrWhiteSpace(CustomerCompanyName))
-            yield return new ValidationResult("Customer company name is required", [nameof(CustomerCompanyName)]);
-
-        if (string.IsNullOrWhiteSpace(ExecutorCompanyName))
-            yield return new ValidationResult("Executor company name is required", [nameof(ExecutorCompanyName)]);
-
         if (StartDate >= EndDate)
             yield return new ValidationResult("Start date must be earlier than end date", [nameof(StartDate), nameof(EndDate)]);
 

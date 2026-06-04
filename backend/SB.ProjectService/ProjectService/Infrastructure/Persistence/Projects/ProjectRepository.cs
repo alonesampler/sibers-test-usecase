@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjectService.Application.UseCases.Projects.DTOs;
 using ProjectService.Domain.Projects;
 using ProjectService.Domain.Projects.Repositories;
 
@@ -22,7 +21,7 @@ internal sealed class ProjectRepository(DatabaseContext db) : IProjectRepository
             .Include(p => p.Employees)
             .FirstOrDefaultAsync(p => p.Id == id);
 
-    public async Task<IEnumerable<Project>> GetAllAsync(ProjectFilterDto filter, ProjectSort sort)
+    public async Task<IEnumerable<Project>> GetAllAsync(ProjectFilter filter, ProjectSort sort)
     {
         var query = db.Projects
             .Include(p => p.Manager)

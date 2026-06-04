@@ -8,8 +8,8 @@ public interface IUnitOfWork
 {
     IEmployeeRepository EmployeeRepository { get; }
     IProjectRepository ProjectRepository { get; }
-
     IDocumentRepository DocumentRepository { get; }
+    IProjectTaskRepository ProjectTaskRepository { get; }
 
     Task SaveAsync(CancellationToken ct = default);
 }

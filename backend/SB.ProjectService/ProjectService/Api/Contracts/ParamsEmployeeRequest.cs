@@ -2,7 +2,7 @@
 
 namespace ProjectService.Api.Contracts;
 
-public class ParamsEmployeeRequest : IValidatableObject
+public record ParamsEmployeeRequest : IValidatableObject
 {
     public required string Email { get; init; }
     public required string Name { get; init; }

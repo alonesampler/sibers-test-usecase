@@ -10,6 +10,7 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Document> Documents { get; set; }
+    public DbSet<ProjectTask> ProjectTasks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

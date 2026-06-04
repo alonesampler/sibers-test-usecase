@@ -1,12 +1,12 @@
 ﻿using ProjectService.Application.Dependencies.Services;
-using ProjectService.Application.UseCases.Projects.DTOs;
+using ProjectService.Domain.Projects;
 
 namespace ProjectService.Api.Endpoints.Projects;
 
 public static class GetProjectsEndpoint
 {
     public static async Task<IResult> GetAll(
-        [AsParameters] ProjectFilterDto filter,
+        [AsParameters] ProjectFilter filter,
         ProjectSort sort,
         IGettingProjectsService service,
         CancellationToken ct)
