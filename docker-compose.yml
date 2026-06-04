@@ -55,7 +55,7 @@ services:
       proj_mssql:
         condition: service_healthy
       auth:
-        condition: service_healthy
+        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: Server=proj_mssql,1433;Database=siber-project;User Id=sa;Password=my-Se1c%ret-pw;TrustServerCertificate=True;Encrypt=True;
@@ -84,9 +84,9 @@ services:
       dockerfile: Dockerfile
     depends_on:
       auth:
-        condition: service_healthy
+        condition: service_started
       project-service:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
 
 volumes:
