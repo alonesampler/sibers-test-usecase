@@ -30,7 +30,7 @@ export function normalizeProjectTasks(tasks: ProjectTask[]): ProjectTask[] {
   return tasks.map(normalizeProjectTask)
 }
 
-/** Backend сериализует enum как число (1, 2, 3), не как строку. */
+/** Backend may serialize enums as numbers (1, 2, 3), not strings. */
 export function serializeTaskRequest(body: ParamsProjectTaskRequest) {
   const { status, ...rest } = body
   return {

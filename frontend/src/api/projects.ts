@@ -52,7 +52,7 @@ function isSameProject(p: Project, body: ParamsProjectRequest): boolean {
   )
 }
 
-/** POST не возвращает id — находим проект в списке по полям. */
+/** POST does not return id; resolve the project from the list by fields. */
 export async function createProject(body: ParamsProjectRequest): Promise<string> {
   await request<void>(API_BASE, '/projects', {
     method: 'POST',
